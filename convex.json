@@ -1,0 +1,12 @@
+{
+  "project": "treehacks-frontend",
+  "team": "anthony-zhou",
+  "prodUrl": "https://strange-curlew-303.convex.cloud",
+  "functions": "convex/",
+  "authInfo": [
+    {
+      "domain": "https://dev-6fn3l36chpsmbcg6.us.auth0.com/",
+      "applicationID": "GlU8i5aelEEJqejmpTexvBeVsdDWbtis"
+    }
+  ]
+}

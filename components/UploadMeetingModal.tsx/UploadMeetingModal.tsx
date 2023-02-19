@@ -49,6 +49,7 @@ export default function UploadMeetingModal({
         getDownloadURL(uploadTask.snapshot.ref)
           .then((url) => {
             setDownloadUrl(url);
+            console.log(url);
             return generateAnalysis(url);
           })
           .then(({ response, url }) => {
@@ -61,18 +62,20 @@ export default function UploadMeetingModal({
   };
 
   const generateAnalysis = async (url: string) => {
-    const response = "analysis";
+    const response = { transcripts: [], questions: [] };
+
     return { response, url };
   };
 
-  const postEverythingToFirebase = async (analysis: string, url: string) => {
+  const postEverythingToFirebase = async (response: any, url: string) => {
     const collectionRef = collection(firebase.db, "conversations");
     const docRef = await addDoc(collectionRef, {
       title: formFields.interviewTitle,
       aboutUser: formFields.aboutUser,
       learningObjectives: formFields.learningObjectives,
       downloadUrl,
-      analysis: analysis,
+      transcripts: response.transcripts,
+      questions: response.questions,
       id: nanoid(),
     });
     console.log("Document written with ID: ", docRef.id);

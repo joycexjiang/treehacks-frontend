@@ -2,6 +2,7 @@ import { Cog8ToothIcon } from "@heroicons/react/24/outline";
 import Searchbar from "../Searchbar";
 import { useState } from "react";
 import NewMeetingModal from "../NewMeetingModal/NewMeetingModal";
+import UploadMeetingModal from "../UploadMeetingModal.tsx/UploadMeetingModal";
 
 export default function Header() {
   const [modalisOpen, setModalisOpen] = useState(false);
@@ -58,6 +59,7 @@ export default function Header() {
         </div>
       </div>
       <NewMeetingModal isOpen={modalisOpen} setIsOpen={setModalisOpen} />
+      <UploadMeetingModal isOpen={modalisOpen} setIsOpen={setModalisOpen}/>
     </>
   );
 }

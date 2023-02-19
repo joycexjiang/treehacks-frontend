@@ -7,6 +7,7 @@ import Layout from "../components/Layout";
 // TODO: make the textarea editable.
 
 const Home: NextPage = () => {
+
   const meetings = [
     {
       name: "John Doe",

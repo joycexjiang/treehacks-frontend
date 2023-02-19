@@ -10,12 +10,12 @@ const authInfo = convexConfig.authInfo[0];
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ConvexProviderWithAuth0
-      client={convex}
-      authInfo={authInfo}
-      loggedOut={<LoginButton />}
-    >
-      <Component {...pageProps} />
-    </ConvexProviderWithAuth0>
+    // <ConvexProviderWithAuth0
+    //   client={convex}
+    //   authInfo={authInfo}
+    //   loggedOut={<LoginButton />}
+    // >
+    <Component {...pageProps} />
+    // </ConvexProviderWithAuth0>
   );
 }

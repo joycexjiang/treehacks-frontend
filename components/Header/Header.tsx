@@ -1,5 +1,4 @@
 import Link from "next/link";
-import logo from "../../assets/vercel.svg";
 import Image from "next/image";
 import { Cog8ToothIcon } from "@heroicons/react/24/outline";
 import Searchbar from "../Searchbar";
@@ -15,7 +14,11 @@ export default function Header() {
     <>
       <div className="px-6 py-8 border-b-2">
         <div className="flex justify-between">
-          <div className="w-64">logo</div>
+          <div className="w-64 text-lg">
+            <div className="flex flex-col justify-center">
+              <Link href="/">ChatQuery</Link>
+            </div>
+          </div>
           <div className="flex flex-grow justify-between gap-4">
             <Searchbar />
             <div>

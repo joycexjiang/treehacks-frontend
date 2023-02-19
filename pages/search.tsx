@@ -35,10 +35,10 @@ export default function Search() {
   return (
     <Layout>
       <div className="container mx-auto">
-        <div className="pt-10 grid grid-cols-11 gap-16">
+        <div className="pt-10 lg:grid md:grid-cols-11 gap-16">
           <div className="col-span-4">
             <h1 className="text-4xl mb-12">{query}</h1>
-            <div className="border-gray-300 border-[1px] rounded-xl py-8 px-10 text-md leading-relaxed bg-white opacity-70">
+            <div className="border-gray-300 border-[1px] rounded-xl py-8 px-10 text-md leading-relaxed bg-white opacity-70 mb-6">
               The process typically begins by gathering all of the necessary
               information and documents required to complete the task at hand.
               This information is then entered into a system or platform that

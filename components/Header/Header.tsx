@@ -2,6 +2,7 @@ import Link from "next/link";
 import logo from "../../assets/vercel.svg";
 import Image from "next/image";
 import { Cog8ToothIcon } from "@heroicons/react/24/outline";
+import Searchbar from "../Searchbar";
 
 export default function Header() {
   return (
@@ -9,15 +10,7 @@ export default function Header() {
       <div className="flex justify-between">
         <div className="w-48">logo</div>
         <div className="flex flex-grow justify-between gap-4">
-          <div className="flex-grow border-2 flex-row border-[#D9D9D9] bg-white py-2 rounded-xl text-sm ">
-            <input
-              type="text"
-              // value={"filterText"}
-              // onChange={(e) => setFilterText(e.target.value)}
-              placeholder="Search"
-              className="inline focus:outline-none ml-3 flex-1"
-            ></input>
-          </div>
+          <Searchbar />
           <div>
             <button
               onClick={() => console.log("new meeting")}

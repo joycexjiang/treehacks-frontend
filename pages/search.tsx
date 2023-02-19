@@ -38,7 +38,7 @@ export default function Search() {
         <div className="pt-10 grid grid-cols-11 gap-16">
           <div className="col-span-4">
             <h1 className="text-4xl mb-12">{query}</h1>
-            <div className="border-gray-300 border-[1px] rounded-xl py-8 px-10 text-sm">
+            <div className="border-gray-300 border-[1px] rounded-xl py-8 px-10 text-md leading-relaxed bg-white opacity-70">
               The process typically begins by gathering all of the necessary
               information and documents required to complete the task at hand.
               This information is then entered into a system or platform that
@@ -53,9 +53,9 @@ export default function Search() {
           <div className="col-span-7">
             <div className="md:columns-2 gap-6">
               {results.map(({ name, date, notes }) => (
-                <div className="break-inside-avoid-column border-[1px] border-gray-300 rounded-xl py-8 px-10 mb-6 text-sm">
+                <div className="break-inside-avoid-column border-[1px] border-gray-300 rounded-xl py-8 px-10 mb-6 text-sm bg-white bg-opacity-70">
                   <div className="flex justify-between px-2 mb-4">
-                    <div className="border-2 rounded-md px-5 py-2">
+                    <div className="border-2 rounded-md px-5 py-2 bg-white bg-opacity-100">
                       <p>{name}</p>
                     </div>
                     <div className="flex flex-col justify-center">

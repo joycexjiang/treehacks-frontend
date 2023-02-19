@@ -30,14 +30,13 @@ const Home: NextPage = () => {
       <div className="container mx-auto">
         <div className="pt-10 lg:grid md:grid-cols-11 gap-16">
           <div className="col-span-4">
-           
 
               <div className="mt-1">
                     <textarea
                       id="notepad"
                       name="notepad"
-                      rows={5}
-                      className="min-h-80% mt-1 leading-relaxed block w-full rounded-md border-gray-300  border-[1px] shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-md py-8 px-10 mb-6"
+                      rows={10}
+                      className="min-h-200 mt-1 leading-relaxed block w-full rounded-md border-gray-300  border-[1px] shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-md py-8 px-10 mb-6"
                       placeholder="Use this area to plan any premeditated questions, thoughts, or to
                       jot down some quick notes!"
                       defaultValue={''}

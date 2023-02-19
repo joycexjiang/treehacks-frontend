@@ -15,7 +15,7 @@ export default function Search() {
     search(query as string).then((results) => {
       setResults(results);
     });
-  });
+  }, [query]);
 
   return (
     <Layout>

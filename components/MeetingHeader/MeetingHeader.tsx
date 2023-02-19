@@ -1,18 +1,23 @@
-import { Cog8ToothIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftOnRectangleIcon,
+  Cog8ToothIcon,
+} from "@heroicons/react/24/outline";
 import Searchbar from "../Searchbar";
 import { useState } from "react";
 import NewMeetingModal from "../NewMeetingModal/NewMeetingModal";
 import UploadMeetingModal from "../UploadMeetingModal.tsx/UploadMeetingModal";
+import { useRouter } from "next/router";
 
 export default function Header() {
   const [modalisOpen, setModalisOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <>
       <div className="px-6 py-8 border-b-2">
         <div className="flex justify-between">
           <div className="flex justify-between gap-4">
-            <div className="flex flex-col justify-center">
+            {/* <div className="flex flex-col justify-center">
               <button
                 onClick={() => console.log("new meeting")}
                 className="border-[1px] border-[#D9D9D9] bg-white px-2 py-2 rounded-full text-md text-gray-700"
@@ -27,24 +32,16 @@ export default function Header() {
               >
                 <Cog8ToothIcon className="h-6 w-6" />
               </button>
-            </div>
+            </div> */}
           </div>
 
           <div className="flex justify-between gap-4">
             <div className="flex flex-col justify-center">
               <button
-                onClick={() => console.log("new meeting")}
+                onClick={() => router.push("/")}
                 className="border-[1px] border-[#D9D9D9] bg-white px-2 py-2 rounded-full text-md text-gray-700"
               >
-                <Cog8ToothIcon className="h-6 w-6" />
-              </button>
-            </div>
-            <div className="flex flex-col justify-center">
-              <button
-                onClick={() => console.log("new meeting")}
-                className="border-[1px] border-[#D9D9D9] bg-white px-2 py-2 rounded-full text-md text-gray-700"
-              >
-                <Cog8ToothIcon className="h-6 w-6" />
+                <ArrowLeftOnRectangleIcon className="h-6 w-6" />
               </button>
             </div>
             <div className="flex flex-col justify-center">
@@ -59,7 +56,7 @@ export default function Header() {
         </div>
       </div>
       <NewMeetingModal isOpen={modalisOpen} setIsOpen={setModalisOpen} />
-      <UploadMeetingModal isOpen={modalisOpen} setIsOpen={setModalisOpen}/>
+      <UploadMeetingModal isOpen={modalisOpen} setIsOpen={setModalisOpen} />
     </>
   );
 }

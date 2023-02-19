@@ -1,8 +1,10 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { nanoid } from "nanoid";
+import { useRouter } from "next/router";
 import { Fragment, useState } from "react";
+import { analyze } from "../../lib/api";
 import firebase from "../../lib/firebase";
 
 type UploadMeetingModalProps = {
@@ -20,6 +22,7 @@ export default function UploadMeetingModal({
   >("initial");
   const [formFields, setFormFields] = useState<{ [key: string]: string }>({});
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleChange = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.currentTarget;
@@ -45,38 +48,41 @@ export default function UploadMeetingModal({
       },
       (err) => console.log(err),
       () => {
-        // download url
-        getDownloadURL(uploadTask.snapshot.ref)
-          .then((url) => {
-            setDownloadUrl(url);
-            console.log(url);
-            return generateAnalysis(url);
-          })
-          .then(({ response, url }) => {
-            return postEverythingToFirebase(response, url);
-          });
+        // complete
+        setUploadState("uploaded");
+
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          setDownloadUrl(url);
+        });
       }
     );
-
-    setUploadState("uploaded");
   };
 
-  const generateAnalysis = async (url: string) => {
-    const response = { transcripts: [], questions: [] };
-
-    return { response, url };
+  const handleGenerateAnalysis = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+    if (!downloadUrl) return;
+    const docId = nanoid();
+    const response = await generateAnalysis(downloadUrl, docId);
+    await postEverythingToFirebase(docId);
+    router.push("/view_meeting?id=" + docId);
   };
 
-  const postEverythingToFirebase = async (response: any, url: string) => {
-    const collectionRef = collection(firebase.db, "conversations");
-    const docRef = await addDoc(collectionRef, {
+  const generateAnalysis = async (url: string, docId: string) => {
+    const { message } = await analyze(url, docId);
+    console.log(message);
+    return message;
+  };
+
+  const postEverythingToFirebase = async (docId: string) => {
+    const docRef = doc(firebase.db, "conversations/" + docId);
+    await setDoc(docRef, {
       title: formFields.interviewTitle,
       aboutUser: formFields.aboutUser,
       learningObjectives: formFields.learningObjectives,
       downloadUrl,
-      transcripts: response.transcripts,
-      questions: response.questions,
-      id: nanoid(),
+      date: formFields.date,
     });
     console.log("Document written with ID: ", docRef.id);
     return docRef;
@@ -139,6 +145,14 @@ export default function UploadMeetingModal({
                     onChange={handleChange}
                   />
                 </div>
+                <div className="mb-6">
+                  <h3 className="font-bold mb-1 text-sm">Date</h3>
+                  <textarea
+                    className="w-full h-12 border-2 border-gray-300 rounded-lg p-2"
+                    name="date"
+                    onChange={handleChange}
+                  />
+                </div>
 
                 <div>
                   <form onSubmit={handleSubmit}>
@@ -162,12 +176,14 @@ export default function UploadMeetingModal({
                 </div>
 
                 <div className="flex justify-center">
-                  <button
-                    onClick={() => console.log("new meeting")}
-                    className="border-2 border-[#D9D9D9] bg-white px-5 py-2 rounded-md text-sm text-gray-700"
-                  >
-                    Start Analysis
-                  </button>
+                  <form onSubmit={handleGenerateAnalysis}>
+                    <button
+                      type="submit"
+                      className="border-2 border-[#D9D9D9] bg-white px-5 py-2 rounded-md text-sm text-gray-700"
+                    >
+                      Start Analysis
+                    </button>
+                  </form>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

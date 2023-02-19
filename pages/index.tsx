@@ -17,10 +17,8 @@ function classNames(...classes:any[]) {
 const Home: NextPage = () => {
 
   const navigation = [
-    { name: 'Dashboard', href: '#', current: true },
-    { name: 'Team', href: '#', current: false },
-    { name: 'Projects', href: '#', current: false },
-    { name: 'Calendar', href: '#', current: false },
+    { name: 'New Meeting', href: '#', current: true },
+    { name: 'Upload Meeting', href: '#', current: false }
   ]
 
   return (<>
@@ -43,54 +41,11 @@ const Home: NextPage = () => {
                     alt="Your Company"
                   />
                 </div>
-                <div className="hidden lg:ml-6 lg:flex lg:space-x-8">
 
-            <div className="space-y-1 px-2 pt-2 pb-3">
-              {navigation.map((item) => (
-                <Disclosure.Button
-                  key={item.name}
-                  as="a"
-                  href={item.href}
-                  className={classNames(
-                    item.current ? 'bg-gray-100 text-gray-900' : 'text-gray-900 hover:bg-gray-50 hover:text-gray-900',
-                    'block rounded-md py-2 px-3 text-base font-medium'
-                  )}
-                  aria-current={item.current ? 'page' : undefined}
-                >
-                  {item.name}
-                </Disclosure.Button>
-              ))}
-            </div>
-
-                  {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                  <a
-                    href="#"
-                    className="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900"
-                  >
-                    Dashboard
-                  </a>
-                  <a
-                    href="#"
-                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                  >
-                    Team
-                  </a>
-                  <a
-                    href="#"
-                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                  >
-                    Projects
-                  </a>
-                  <a
-                    href="#"
-                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                  >
-                    Calendar
-                  </a> */}
-                </div>
+          
               </div>
               <div className="flex flex-1 items-center justify-center px-2 lg:ml-6 lg:justify-end">
-                <div className="w-full max-w-lg lg:max-w-xs">
+              <div className="w-full max-w-lg lg:max-w-xs">
                   <label htmlFor="search" className="sr-only">
                     Search
                   </label>
@@ -120,13 +75,26 @@ const Home: NextPage = () => {
                 </Disclosure.Button>
               </div>
               <div className="hidden lg:ml-4 lg:flex lg:items-center">
-                <button
-                  type="button"
-                  className="flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+                
+                <div className="space-y-1 px-2 pt-2 pb-3">
+
+                <nav className="hidden lg:flex lg:space-x-8 lg:py-2" aria-label="Global">
+                  {navigation.map((item) => (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      className={classNames(
+                        item.current ? 'bg-gray-100 text-gray-900' : 'text-gray-900 hover:bg-gray-50 hover:text-gray-900',
+                        'rounded-md py-2 px-3 inline-flex items-center text-sm font-medium'
+                      )}
+                      aria-current={item.current ? 'page' : undefined}
+                    >
+                      {item.name}
+                    </a>
+                  ))}
+                </nav>
+
+                </div>
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-4 flex-shrink-0">

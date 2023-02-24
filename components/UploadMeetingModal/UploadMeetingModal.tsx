@@ -12,15 +12,36 @@ type UploadMeetingModalProps = {
   setIsOpen: (isOpen: boolean) => void;
 };
 
+type FormData = {
+  interviewTitle: string;
+  aboutUser: string;
+  learningObjectives: string;
+  date: string;
+};
+
+enum UploadState {
+  Initial = "initial",
+  Uploading = "uploading",
+  Uploaded = "uploaded",
+}
+
+const STORAGE_PATH = "meetings";
+const CONVERSATIONS_COLLECTION = "conversations";
+
 export default function UploadMeetingModal({
   isOpen,
   setIsOpen,
 }: UploadMeetingModalProps) {
   const [file, setFile] = useState<File | null>(null);
-  const [uploadState, setUploadState] = useState<
-    "initial" | "uploading" | "uploaded"
-  >("initial");
-  const [formFields, setFormFields] = useState<{ [key: string]: string }>({});
+  const [uploadState, setUploadState] = useState<UploadState>(
+    UploadState.Initial
+  );
+  const [formFields, setFormFields] = useState<FormData>({
+    interviewTitle: "",
+    aboutUser: "",
+    learningObjectives: "",
+    date: "",
+  });
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const router = useRouter();
 
@@ -32,30 +53,38 @@ export default function UploadMeetingModal({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!file) return;
-    setUploadState("uploading");
+    setUploadState(UploadState.Uploading);
 
     // upload the file.
-    const storageRef = ref(firebase.storage, `meetings/${file.name}`);
+    const storageRef = ref(firebase.storage, `${STORAGE_PATH}/${file.name}`);
+
     const uploadTask = uploadBytesResumable(storageRef, file);
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // progress
-        console.log(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100 + "%"
+    try {
+      // Try to upload the file while recording progress and handle errors.
+      await new Promise<void>((resolve, reject) => {
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            // Record Progress
+            const percentage =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log(percentage + "%");
+          },
+          (err) => reject(err),
+          () => resolve()
         );
-      },
-      (err) => console.log(err),
-      () => {
-        // complete
-        setUploadState("uploaded");
+      });
 
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          setDownloadUrl(url);
-        });
-      }
-    );
+      // Once the file is uploaded, get and set the download url.
+      setUploadState(UploadState.Uploaded);
+
+      const url = await getDownloadURL(uploadTask.snapshot.ref);
+      setDownloadUrl(url);
+    } catch (error) {
+      console.log(error);
+      setUploadState(UploadState.Initial);
+    }
   };
 
   const handleGenerateAnalysis = async (
@@ -76,16 +105,22 @@ export default function UploadMeetingModal({
   };
 
   const postEverythingToFirebase = async (docId: string) => {
-    const docRef = doc(firebase.db, "conversations/" + docId);
-    await setDoc(docRef, {
-      title: formFields.interviewTitle,
-      aboutUser: formFields.aboutUser,
-      learningObjectives: formFields.learningObjectives,
-      downloadUrl,
-      date: formFields.date,
-    });
-    console.log("Document written with ID: ", docRef.id);
-    return docRef;
+    const docRef = doc(firebase.db, `${CONVERSATIONS_COLLECTION}/${docId}`);
+
+    try {
+      await setDoc(docRef, {
+        title: formFields.interviewTitle,
+        aboutUser: formFields.aboutUser,
+        learningObjectives: formFields.learningObjectives,
+        downloadUrl,
+        date: formFields.date,
+      });
+      console.log("Document added with ID: ", docRef.id);
+      return docRef;
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      throw error;
+    }
   };
 
   return (
@@ -158,17 +193,27 @@ export default function UploadMeetingModal({
                   <form onSubmit={handleSubmit}>
                     <input
                       type="file"
-                      onChange={(e) =>
-                        setFile(e.target.files && e.target.files[0])
-                      }
+                      accept="audio/*"
+                      onChange={(e) => {
+                        const selectedFile =
+                          e.target.files && e.target.files[0];
+                        if (
+                          selectedFile &&
+                          selectedFile.type.includes("audio/")
+                        ) {
+                          setFile(selectedFile);
+                        } else {
+                          alert("Please select an audio file.");
+                        }
+                      }}
                     />
                     <button
                       type="submit"
                       className="py-2 px-2 bg-white rounded-md border-2 border-[#D9D9D9] text-sm text-gray-700"
                     >
-                      {uploadState === "initial"
+                      {uploadState === UploadState.Initial
                         ? "Upload"
-                        : uploadState === "uploading"
+                        : uploadState === UploadState.Uploading
                         ? "Uploading..."
                         : "Uploaded"}
                     </button>

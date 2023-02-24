@@ -5,7 +5,7 @@ import {
 import Searchbar from "../Searchbar";
 import { useState } from "react";
 import NewMeetingModal from "../NewMeetingModal/NewMeetingModal";
-import UploadMeetingModal from "../UploadMeetingModal.tsx/UploadMeetingModal";
+import UploadMeetingModal from "../UploadMeetingModal/UploadMeetingModal";
 import { useRouter } from "next/router";
 
 export default function Header() {

@@ -4,6 +4,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/router";
 import { Fragment, useState } from "react";
+import useFileUpload, { UploadState } from "../../hooks/useFileUpload";
 import { analyze } from "../../lib/api";
 import firebase from "../../lib/firebase";
 
@@ -19,11 +20,11 @@ type FormData = {
   date: string;
 };
 
-enum UploadState {
-  Initial = "initial",
-  Uploading = "uploading",
-  Uploaded = "uploaded",
-}
+// enum UploadState {
+//   Initial = "initial",
+//   Uploading = "uploading",
+//   Uploaded = "uploaded",
+// }
 
 const STORAGE_PATH = "meetings";
 const CONVERSATIONS_COLLECTION = "conversations";
@@ -33,58 +34,53 @@ export default function UploadMeetingModal({
   setIsOpen,
 }: UploadMeetingModalProps) {
   const [file, setFile] = useState<File | null>(null);
-  const [uploadState, setUploadState] = useState<UploadState>(
-    UploadState.Initial
-  );
+
   const [formFields, setFormFields] = useState<FormData>({
     interviewTitle: "",
     aboutUser: "",
     learningObjectives: "",
     date: "",
   });
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+
   const router = useRouter();
+
+  const {
+    uploadState,
+    downloadUrl,
+    error,
+    uploadProgress,
+    uploadFile,
+    cancelUpload,
+  } = useFileUpload(STORAGE_PATH);
 
   const handleChange = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.currentTarget;
     setFormFields((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFileSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!file) return;
-    setUploadState(UploadState.Uploading);
+    if (uploadState !== UploadState.Initial) return;
 
-    // upload the file.
-    const storageRef = ref(firebase.storage, `${STORAGE_PATH}/${file.name}`);
+    await uploadFile(file);
 
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    try {
-      // Try to upload the file while recording progress and handle errors.
-      await new Promise<void>((resolve, reject) => {
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            // Record Progress
-            const percentage =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log(percentage + "%");
-          },
-          (err) => reject(err),
-          () => resolve()
-        );
-      });
-
-      // Once the file is uploaded, get and set the download url.
-      setUploadState(UploadState.Uploaded);
-
-      const url = await getDownloadURL(uploadTask.snapshot.ref);
-      setDownloadUrl(url);
-    } catch (error) {
+    if (error) {
       console.log(error);
-      setUploadState(UploadState.Initial);
+      alert(`Error uploading file: ${error.message}`);
+      return;
     }
+  };
+
+  const UploadProgress = ({ progress }: { progress: number }) => {
+    return (
+      <div className="relative w-full h-2 bg-gray-200 rounded-full">
+        <div
+          className="absolute top-0 left-0 h-2 bg-green-400 rounded-full"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+    );
   };
 
   const handleGenerateAnalysis = async (
@@ -190,10 +186,11 @@ export default function UploadMeetingModal({
                 </div>
 
                 <div>
-                  <form onSubmit={handleSubmit}>
+                  <form onSubmit={handleFileSubmit}>
                     <input
                       type="file"
                       accept="audio/*"
+                      disabled={uploadState !== UploadState.Initial}
                       onChange={(e) => {
                         const selectedFile =
                           e.target.files && e.target.files[0];
@@ -207,16 +204,35 @@ export default function UploadMeetingModal({
                         }
                       }}
                     />
-                    <button
-                      type="submit"
-                      className="py-2 px-2 bg-white rounded-md border-2 border-[#D9D9D9] text-sm text-gray-700"
-                    >
-                      {uploadState === UploadState.Initial
-                        ? "Upload"
-                        : uploadState === UploadState.Uploading
-                        ? "Uploading..."
-                        : "Uploaded"}
-                    </button>
+                    {uploadState === UploadState.Initial && (
+                      <button
+                        type="submit"
+                        className="py-2 px-2 bg-white rounded-md border-2 border-[#D9D9D9] text-sm text-gray-700"
+                      >
+                        Upload
+                      </button>
+                    )}
+                    {uploadState === UploadState.Uploading && (
+                      <button
+                        type="button"
+                        onClick={cancelUpload}
+                        className="py-2 px-2 bg-white rounded-md border-2 border-[#D9D9D9] text-sm text-gray-700"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                    {uploadState === UploadState.Uploaded && (
+                      <button
+                        type="button"
+                        className="py-2 px-2 bg-white rounded-md border-2 border-[#D9D9D9] text-sm text-gray-700"
+                        disabled
+                      >
+                        Uploaded
+                      </button>
+                    )}
+                    {uploadState === UploadState.Uploading && (
+                      <UploadProgress progress={uploadProgress} />
+                    )}
                   </form>
                 </div>
 

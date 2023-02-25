@@ -17,7 +17,7 @@ function sendAudioBlobToServer(audioBlob: Blob) {
   const formData = new FormData();
   formData.append("file", audioBlob);
   axios
-    .post(`${process.env.BACKEND_IP}/upload`, formData)
+    .post(`${process.env.NEXT_PUBLIC_BACKEND_IP}/upload`, formData)
     .then((res) => console.log(res.data));
 }
 

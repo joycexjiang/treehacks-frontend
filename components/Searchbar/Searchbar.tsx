@@ -8,6 +8,7 @@ export default function Searchbar() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("searching: ", searchText);
     router.push(`/search?q=${encodeURIComponent(searchText)}`);
   };
 

@@ -11,7 +11,7 @@ export default function Meeting() {
       }}
       className="h-screen flex"
     >
-      <MeetingSidebar />
+      <MeetingSidebar meeting={null} />
       <div className="flex-grow">
         <MeetingHeader />
         <div className="grid grid-cols-2 gap-6 py-8 px-6">

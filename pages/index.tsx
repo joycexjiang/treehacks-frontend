@@ -7,40 +7,22 @@ import { useState } from "react";
 
 import Layout from "../components/Layout";
 import firebase from "../lib/firebase";
-
-interface MeetingData {
-  id: string;
-  title: string;
-  date: string;
-}
+import { Meeting } from "../schema/interfaces";
 
 interface HomeProps {
-  meetings: MeetingData[];
+  meetings: Meeting[];
 }
 
 const Home: NextPage<HomeProps> = ({ meetings }) => {
-  const [meetingsState, setMeetingsState] = useState<MeetingData[]>(meetings);
+  const [meetingsState, setMeetingsState] = useState<Meeting[]>(meetings);
   const router = useRouter();
 
   return (
     <Layout>
       <div className="container mx-auto">
-        <div className="pt-10 lg:grid md:grid-cols-11 gap-16">
-          <div className="col-span-4">
-            <div className="mt-1">
-              <textarea
-                id="notepad"
-                name="notepad"
-                rows={10}
-                className="min-h-200 mt-1 leading-relaxed block w-full rounded-md border-gray-300  border-[1px] shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-md py-8 px-10 mb-6"
-                placeholder="Use this area to plan any premeditated questions, thoughts, or to
-                      jot down some quick notes!"
-                defaultValue={""}
-              />
-            </div>
-          </div>
+        <div className="pt-10 gap-16">
           <div className="col-span-7">
-            <h1 className="text-4xl mb-12">My meetings</h1>
+            <h1 className="text-4xl mb-12 text-center">My meetings</h1>
             {meetingsState.map(({ title, date, id }) => (
               <div
                 key={id}
@@ -77,7 +59,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
 
     const querySnapshot = await getDocs(filteredQuery);
     const meetingsData = querySnapshot.docs.map(
-      (doc) => ({ ...doc.data(), id: doc.id } as MeetingData)
+      (doc) => ({ ...doc.data(), id: doc.id } as Meeting)
     );
 
     return {

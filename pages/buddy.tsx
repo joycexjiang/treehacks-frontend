@@ -1,12 +1,12 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
 
 /* sidebar */
 
-import { Fragment, useState } from 'react'
-import { Dialog, Menu, Transition } from '@headlessui/react'
-import { Switch } from '@headlessui/react'
+import { Fragment, useState } from "react";
+import { Dialog, Menu, Transition } from "@headlessui/react";
+import { Switch } from "@headlessui/react";
 import {
   Bars3BottomLeftIcon,
   BellIcon,
@@ -17,26 +17,26 @@ import {
   InboxIcon,
   UsersIcon,
   XMarkIcon,
-} from '@heroicons/react/24/outline'
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+} from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
-function classNames(...classes:any[]) {
-  return classes.filter(Boolean).join(' ')
+function classNames(...classes: any[]) {
+  return classes.filter(Boolean).join(" ");
 }
 
 const navigation = [
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Team', href: '#', icon: UsersIcon, current: false },
-  { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-  { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Documents', href: '#', icon: InboxIcon, current: false },
-  { name: 'Reports', href: '#', icon: ChartBarIcon, current: false },
-]
+  { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
+  { name: "Team", href: "#", icon: UsersIcon, current: false },
+  { name: "Projects", href: "#", icon: FolderIcon, current: false },
+  { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
+  { name: "Documents", href: "#", icon: InboxIcon, current: false },
+  { name: "Reports", href: "#", icon: ChartBarIcon, current: false },
+];
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
+  { name: "Your Profile", href: "#" },
+  { name: "Settings", href: "#" },
+  { name: "Sign out", href: "#" },
+];
 
 const Button = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -46,19 +46,21 @@ const Button = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-
 const Home: NextPage = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [agreed, setAgreed] = useState(false)
-
-
-  return (<>
-    <Button>hey</Button>
+  return (
+    <>
+      <Button>hey</Button>
 
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
-          <Dialog as="div" className="relative z-40 md:hidden" onClose={setSidebarOpen}>
+          <Dialog
+            as="div"
+            className="relative z-40 md:hidden"
+            onClose={setSidebarOpen}
+          >
             <Transition.Child
               as={Fragment}
               enter="transition-opacity ease-linear duration-300"
@@ -98,7 +100,10 @@ const Home: NextPage = () => {
                         onClick={() => setSidebarOpen(false)}
                       >
                         <span className="sr-only">Close sidebar</span>
-                        <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                        <XMarkIcon
+                          className="h-6 w-6 text-white"
+                          aria-hidden="true"
+                        />
                       </button>
                     </div>
                   </Transition.Child>
@@ -111,21 +116,23 @@ const Home: NextPage = () => {
                     />
                   </div>
 
-
                   <div className="sm:col-span-2">
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-                Message
-              </label>
-              <div className="mt-1">
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                  defaultValue={'Message'}
-                />
-              </div>
-            </div>
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Message
+                    </label>
+                    <div className="mt-1">
+                      <textarea
+                        id="message"
+                        name="message"
+                        rows={4}
+                        className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        defaultValue={"Message"}
+                      />
+                    </div>
+                  </div>
 
                   <div className="mt-5 h-0 flex-1 overflow-y-auto">
                     <nav className="space-y-1 px-2">
@@ -135,15 +142,17 @@ const Home: NextPage = () => {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? 'bg-gray-100 text-gray-900'
-                              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                            'group flex items-center px-2 py-2 text-base font-medium rounded-md'
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                            "group flex items-center px-2 py-2 text-base font-medium rounded-md"
                           )}
                         >
                           <item.icon
                             className={classNames(
-                              item.current ? 'text-gray-500' : 'text-gray-400 group-hover:text-gray-500',
-                              'mr-4 flex-shrink-0 h-6 w-6'
+                              item.current
+                                ? "text-gray-500"
+                                : "text-gray-400 group-hover:text-gray-500",
+                              "mr-4 flex-shrink-0 h-6 w-6"
                             )}
                             aria-hidden="true"
                           />
@@ -179,14 +188,18 @@ const Home: NextPage = () => {
                     key={item.name}
                     href={item.href}
                     className={classNames(
-                      item.current ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                      'group flex items-center px-2 py-2 text-sm font-medium rounded-md'
+                      item.current
+                        ? "bg-gray-100 text-gray-900"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                      "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
                     )}
                   >
                     <item.icon
                       className={classNames(
-                        item.current ? 'text-gray-500' : 'text-gray-400 group-hover:text-gray-500',
-                        'mr-3 flex-shrink-0 h-6 w-6'
+                        item.current
+                          ? "text-gray-500"
+                          : "text-gray-400 group-hover:text-gray-500",
+                        "mr-3 flex-shrink-0 h-6 w-6"
                       )}
                       aria-hidden="true"
                     />
@@ -194,22 +207,25 @@ const Home: NextPage = () => {
                   </a>
                 ))}
 
-          <div className="sm:col-span-2">
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-                Learning Objectives
-              </label>
-              <div className="mt-1">
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  className="block w-full text-xs rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                  defaultValue={"Understand the marketing manager's role and responsibilities, understand the marketing manager's pain points, understand the marketing manager's goals and objectives, understand the marketing manager's toolkit"}
-                />
-              </div>
-            </div>
-
-
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Learning Objectives
+                  </label>
+                  <div className="mt-1">
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={4}
+                      className="block w-full text-xs rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                      defaultValue={
+                        "Understand the marketing manager's role and responsibilities, understand the marketing manager's pain points, understand the marketing manager's goals and objectives, understand the marketing manager's toolkit"
+                      }
+                    />
+                  </div>
+                </div>
               </nav>
             </div>
           </div>
@@ -225,8 +241,7 @@ const Home: NextPage = () => {
               <Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
             </button>
             <div className="flex flex-1 justify-between px-4">
-              <div className="flex flex-1">hello
-              </div>
+              <div className="flex flex-1">hello</div>
               <div className="ml-4 flex items-center md:ml-6">
                 <button
                   type="button"
@@ -264,8 +279,8 @@ const Home: NextPage = () => {
                             <a
                               href={item.href}
                               className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
+                                active ? "bg-gray-100" : "",
+                                "block px-4 py-2 text-sm text-gray-700"
                               )}
                             >
                               {item.name}
@@ -274,10 +289,7 @@ const Home: NextPage = () => {
                         </Menu.Item>
                       ))}
                     </Menu.Items>
-                    
                   </Transition>
-
-                  
                 </Menu>
               </div>
             </div>
@@ -286,35 +298,42 @@ const Home: NextPage = () => {
           <main className="flex-1">
             <div className="py-6">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-                <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+                <h1 className="text-2xl font-semibold text-gray-900">
+                  Dashboard
+                </h1>
               </div>
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
                 {
                   <div className="sm:col-span-2">
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-                Learning Objectives
-              </label>
-              <div className="mt-1">
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                  defaultValue={"Understand the marketing manager's role and responsibilities, understand the marketing manager's pain points, understand the marketing manager's goals and objectives, understand the marketing manager's toolkit"}
-                />
-              </div>
-            </div>}
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Learning Objectives
+                    </label>
+                    <div className="mt-1">
+                      <textarea
+                        id="message"
+                        name="message"
+                        rows={4}
+                        className="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        defaultValue={
+                          "Understand the marketing manager's role and responsibilities, understand the marketing manager's pain points, understand the marketing manager's goals and objectives, understand the marketing manager's toolkit"
+                        }
+                      />
+                    </div>
+                  </div>
+                }
                 <div className="py-4">
                   <div className="h-96 rounded-lg border-4 border-dashed border-gray-200" />
                 </div>
-                {/* /End replace */}
               </div>
             </div>
           </main>
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

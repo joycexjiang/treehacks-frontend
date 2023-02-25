@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Chunk } from "../schema/interfaces";
 
 export const analyze = async (firebaseUrl: string, docId: string) => {
   const base64Encoded = Buffer.from(firebaseUrl).toString("base64");
@@ -11,7 +12,13 @@ export const analyze = async (firebaseUrl: string, docId: string) => {
   return data;
 };
 
-export const search = async (query: string) => {
+
+export interface SearchResults {
+    output: string;
+    chunks_to_include: Chunk[];
+}
+
+export const search = async (query: string): Promise<SearchResults> =>  {
   const baseUrl = `${process.env.BACKEND_IP}/search`;
 
   const response = await axios.post(baseUrl, null, {
